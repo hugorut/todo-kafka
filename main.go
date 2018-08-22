@@ -9,7 +9,7 @@ import (
 )
 
 var address = flag.String("address", "127.0.0.1:9092", "kafka service address")
-var port = flag.String("http-port", "8081", "http listen port")
+var port = flag.String("http-port", "8081", "port that the http services should listen on")
 
 func main() {
 	flag.Parse()
