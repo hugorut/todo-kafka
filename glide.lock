@@ -1,5 +1,5 @@
-hash: 7899105ac0ad7e803676c6c086aeedaafc8dc2c3044e1f46326071e6ae245724
-updated: 2018-08-22T09:21:57.97178783+01:00
+hash: ecd29c082cf9a22f411db8f75c1dc9c694c2df957b433c0d1940298d01c4f545
+updated: 2018-08-22T15:31:12.075463229+01:00
 imports:
 - name: github.com/davecgh/go-spew
   version: 346938d642f2ec3594ed81d874461961cd0faa76
@@ -13,16 +13,8 @@ imports:
   version: 776d5712da21bc4762676d614db1d8a64f4238b0
 - name: github.com/eapache/queue
   version: 093482f3f8ce946c05bcba64badd2c82369e084d
-- name: github.com/go-redis/redis
-  version: 480db94d33e6088e08d628833b6c0705451d24bb
 - name: github.com/golang/snappy
   version: 2e65f85255dbc3072edf28d6b5b8efc472979f5a
-- name: github.com/onsi/ginkgo
-  version: 3774a09d95489ccaa16032e0770d08ea77ba6184
-  subpackages:
-  - ginkgo
-- name: github.com/onsi/gomega
-  version: b6ea1ea48f981d0f615a154a45eabb9dd466556d
 - name: github.com/pierrec/lz4
   version: 6b9367c9ff401dbc54fabce3fb8d972e799b702d
   subpackages:
@@ -31,6 +23,16 @@ imports:
   version: e2704e165165ec55d062f5919b4b29494e9fa790
 - name: github.com/Shopify/sarama
   version: 647feef69a1a7e0e23cccceeb786176bc4fcf5ea
+  subpackages:
+  - mocks
 - name: github.com/stretchr/testify
   version: f35b8ab0b5a2cef36673838d662e249dd9c94686
-testImports: []
+  subpackages:
+  - assert
+testImports:
+- name: github.com/pkg/errors
+  version: f15c970de5b76fac0b59abb32d62c17cc7bed265
+- name: github.com/pmezard/go-difflib
+  version: d8ed2627bdf02c080bf22230dbb337003b7aba2d
+  subpackages:
+  - difflib

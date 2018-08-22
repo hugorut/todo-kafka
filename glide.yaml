@@ -1,13 +1,5 @@
 package: todo-kafta
 import:
-- package: github.com/onsi/ginkgo
-  version: ^1.6.0
-  subpackages:
-  - ginkgo
-- package: github.com/onsi/gomega
-  version: ^1.4.1
-- package: github.com/go-redis/redis
-  version: ^6.13.2
 - package: github.com/Shopify/sarama
   version: master
 - package: github.com/stretchr/testify
