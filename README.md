@@ -1,5 +1,7 @@
 [![](https://godoc.org/github.com/hugorut/todo-kafka?status.svg)](http://godoc.org/github.com/hugorut/todo-kafka)
 
+[![Build Status](https://travis-ci.org/hugorut/todo-kafka.svg?branch=master)](https://travis-ci.org/hugorut/todo-kafka)
+
 # Todo Kafka
 
 A very simple implementation of the classic todos JSON api which uses kafka + event sourcing to persist data to an in-memory store.
