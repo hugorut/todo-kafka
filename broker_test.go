@@ -2,7 +2,6 @@ package main
 
 import (
 	"testing"
-	"github.com/stretchr/testify/assert"
 	"github.com/Shopify/sarama"
 	"time"
 	"github.com/hugorut/todo-kafka/kafka"
@@ -12,15 +11,15 @@ import (
 
 func TestBroker_Run_CallsCorrectSubscription(t *testing.T) {
 	c := make(MsgChan, 1)
-	var called bool
+
+	var callChan  = make(chan int)
 	callback := func(b []byte) {
-		called = true
+		callChan <- 1
 	}
 
 	c2 := make(MsgChan, 1)
-	var called2 bool
 	callback2 := func(b []byte) {
-		called2 = true
+		callChan <- 2
 	}
 
 	b := NewBroker(NewSubscription(c, map[kafka.Event]todo.MessageCallback{
@@ -34,6 +33,21 @@ func TestBroker_Run_CallsCorrectSubscription(t *testing.T) {
 		Value: []byte(fmt.Sprintf(`{"Type":"%s"}`, kafka.CreateTodo)),
 	}
 	time.Sleep(1 * time.Second)
-	assert.False(t, called)
-	assert.True(t, called2)
+
+	assertion: for {
+		select {
+		case c := <- callChan:
+			if c == 2 {
+				return
+			}
+
+			if c == 1 {
+				t.Errorf("incorrect channel was called")
+				return
+			}
+		case <- time.After(2 * time.Second):
+			t.Errorf("failed asserting that any callbacks were called")
+			break assertion
+		}
+	}
 }

@@ -16,7 +16,7 @@ type Todo struct {
 // data store of Todos
 type Store struct {
 	mem map[int]Todo
-	lock *sync.Mutex
+	lock *sync.RWMutex
 }
 
 // NewStore returns a pointer to a Store instance with a
@@ -24,7 +24,7 @@ type Store struct {
 func NewStore() *Store  {
 	return &Store{
 		mem: make(map[int]Todo),
-		lock: &sync.Mutex{},
+		lock: &sync.RWMutex{},
 	}
 }
 
@@ -69,6 +69,9 @@ func (s *Store) Del(id int) {
 
 // Store.List returns a ordered slice of Todos
 func (s *Store) List() []Todo {
+	s.lock.RLock()
+	defer s.lock.RUnlock()
+
 	ids := todoIds(s.mem)
 	var sorted []Todo = make([]Todo, len(ids))
 
