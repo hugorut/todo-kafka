@@ -3,6 +3,9 @@ package main
 import (
 	"github.com/Shopify/sarama"
 	"github.com/hugorut/todo-kafka/todo"
+	"github.com/hugorut/todo-kafka/kafka"
+	"encoding/json"
+	"log"
 )
 
 // MsgChan is shorthand type for for a ConsumerMessage channel
@@ -12,16 +15,16 @@ type MsgChan chan *sarama.ConsumerMessage
 // subscription is a struct which links a MsgChan to its MessageCallback
 type subscription struct {
 	messages MsgChan
-	callback todo.MessageCallback
+	callbacks map[kafka.Event]todo.MessageCallback
 }
 
 // NewSubscription returns a unexported subscription so that it is explicit that
 // when used external to the package that both messages and callback properties
 // are required for the Broker to function correctly
-func NewSubscription(messages MsgChan, callback todo.MessageCallback) subscription {
+func NewSubscription(messages MsgChan, callbacks map[kafka.Event]todo.MessageCallback) subscription {
 	return subscription{
 		messages: messages,
-		callback: callback,
+		callbacks: callbacks,
 	}
 }
 
@@ -53,7 +56,24 @@ func (b *Broker) listen(s subscription) {
 	for {
 		select {
 		case m := <- s.messages:
-			s.callback(m.Value)
+			log.Printf("received inbound message with value: %s", m.Value)
+
+			var e kafka.Message
+			var b = make([]byte, len(m.Value))
+			copy(b, m.Value)
+
+			if err := json.Unmarshal(b, &e); err != nil {
+				log.Printf("err received marshalling an inbound event err: %+v", err)
+				continue
+			}
+
+			if v, ok := s.callbacks[e.Type]; ok {
+				v(m.Value)
+				continue
+			}
+
+
+			log.Printf("could not find callback for event type: %s", e.Type)
 		}
 	}
 }

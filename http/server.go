@@ -35,13 +35,15 @@ func decodeOrError(writer http.ResponseWriter, reader io.Reader, req interface{}
 
 // sendKafkaMessage provides a more fluent interface to the kafka.SendMessage function
 func sendKafkaMessage(producer kafka.Producer, topic kafka.Topic, msg interface{}) error  {
+	message := kafka.NewMessage(
+		topic,
+		0,
+		msg,
+	)
+
 	return kafka.SendMessage(
 		producer,
-		kafka.NewMessage(
-			topic,
-			0,
-			msg,
-		),
+		message,
 	)
 }
 

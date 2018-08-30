@@ -1,6 +1,9 @@
 package storage
 
-import "sort"
+import (
+	"sort"
+	"sync"
+)
 
 // Todo is a struct which holds information about the
 // the name and id of the todo
@@ -13,6 +16,7 @@ type Todo struct {
 // data store of Todos
 type Store struct {
 	mem map[int]Todo
+	lock *sync.Mutex
 }
 
 // NewStore returns a pointer to a Store instance with a
@@ -20,6 +24,7 @@ type Store struct {
 func NewStore() *Store  {
 	return &Store{
 		mem: make(map[int]Todo),
+		lock: &sync.Mutex{},
 	}
 }
 
@@ -42,6 +47,9 @@ func (s *Store) newID() int {
 // in the memory map. If there is no given ID in the passed Todo
 // a new ID is generated and then added to the memory
 func (s *Store) Put(todo Todo) int {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	if todo.ID == 0 {
 		todo.ID = s.newID()
 	}
@@ -53,6 +61,9 @@ func (s *Store) Put(todo Todo) int {
 
 // Store.Del deletes a given Todo in the mem map
 func (s *Store) Del(id int) {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	delete(s.mem, id)
 }
 
@@ -72,6 +83,9 @@ func (s *Store) List() []Todo {
 
 // Store.Flush resets the underlying memory
 func (s *Store) Flush()  {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	s.mem = make(map[int]Todo)
 }
 

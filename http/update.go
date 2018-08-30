@@ -20,12 +20,17 @@ func updateTodoHandler(producer kafka.Producer) http.HandlerFunc  {
 			request.Body.Close()
 		}()
 
+		if request.Method != http.MethodPut {
+			http.NotFound(writer, request)
+			return
+		}
+
 		var req updateTodoRequest
 		if err := decodeOrError(writer, request.Body, &req); err != nil {
 			return
 		}
 
-		if err := sendKafkaMessage(producer, kafka.UpdateToDo, kafka.UpdateTodoMessage{ID: req.ID, Name: req.Name }); err != nil {
+		if err := sendKafkaMessage(producer, kafka.Todos, kafka.NewUpdateTodoMessage(req.ID, req.Name)); err != nil {
 			log.Printf("error encountered sending kafka msg err: %+v", err)
 			respondJson(writer, http.StatusBadRequest, map[string]string{
 				"error": "could not update todo",

@@ -29,23 +29,13 @@ func Test_main_consumesTopics(t *testing.T) {
 	seedBroker.SetHandlerByMap(map[string]sarama.MockResponse{
 		"MetadataRequest": sarama.NewMockMetadataResponse(t).
 			SetBroker(seedBroker.Addr(), seedBroker.BrokerID()).
-			SetLeader(kafka.CreateToDo.String(), 0, seedBroker.BrokerID()).
-			SetLeader(kafka.DeleteToDo.String(), 0, seedBroker.BrokerID()).
-			SetLeader(kafka.UpdateToDo.String(), 0, seedBroker.BrokerID()),
+			SetLeader(kafka.Todos.String(), 0, seedBroker.BrokerID()),
 		"OffsetRequest": sarama.NewMockOffsetResponse(t).
-			SetOffset(kafka.CreateToDo.String(), 0, sarama.OffsetNewest, 10).
-			SetOffset(kafka.CreateToDo.String(), 0, sarama.OffsetOldest, 7).
-			SetOffset(kafka.DeleteToDo.String(), 0, sarama.OffsetNewest, 10).
-			SetOffset(kafka.DeleteToDo.String(), 0, sarama.OffsetOldest, 7).
-			SetOffset(kafka.UpdateToDo.String(), 0, sarama.OffsetNewest, 10).
-			SetOffset(kafka.UpdateToDo.String(), 0, sarama.OffsetOldest, 7),
+			SetOffset(kafka.Todos.String(), 0, sarama.OffsetNewest, 10).
+			SetOffset(kafka.Todos.String(), 0, sarama.OffsetOldest, 7),
 		"FetchRequest": sarama.NewMockFetchResponse(t, 1).
-			SetMessage(kafka.CreateToDo.String(), 0, 9, testMsg).
-			SetHighWaterMark(kafka.CreateToDo.String(), 0, 14).
-			SetMessage(kafka.DeleteToDo.String(), 0, 9, testMsg).
-			SetHighWaterMark(kafka.DeleteToDo.String(), 0, 14).
-			SetMessage(kafka.UpdateToDo.String(), 0, 9, testMsg).
-			SetHighWaterMark(kafka.UpdateToDo.String(), 0, 14),
+			SetMessage(kafka.Todos.String(), 0, 9, testMsg).
+			SetHighWaterMark(kafka.Todos.String(), 0, 14),
 	})
 
 	flag.Set("address", seedBroker.Addr())

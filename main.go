@@ -19,25 +19,17 @@ func main() {
 		log.Fatal(err)
 	}
 
-	createMsgs, err := kafka.ConsumeTopic(consumer, kafka.CreateToDo)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	deleteMsgs, err := kafka.ConsumeTopic(consumer, kafka.DeleteToDo)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	updateMsgs, err := kafka.ConsumeTopic(consumer, kafka.UpdateToDo)
+	createMsgs, err := kafka.ConsumeTopic(consumer, kafka.Todos)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	b := NewBroker(
-		NewSubscription(createMsgs, todo.Create),
-		NewSubscription(deleteMsgs, todo.Delete),
-		NewSubscription(updateMsgs, todo.Update),
+		NewSubscription(createMsgs, map[kafka.Event]todo.MessageCallback{
+			kafka.CreateTodo: todo.Create,
+			kafka.UpdateTodo: todo.Update,
+			kafka.DeleteTodo: todo.Delete,
+		}),
 	)
 	go b.Run()
 

@@ -44,7 +44,7 @@ func TestDelete_RemovesFromStorage(t *testing.T) {
 		Name: "test3",
 	})
 
-	b, _ := json.Marshal(kafka.DeleteTodoMessage{ID: id2})
+	b, _ := json.Marshal(kafka.DeleteTodoMessage{Message: kafka.Message{ ID: id2 }})
 	Delete(b)
 
 	todos := storage.S.List()
@@ -58,7 +58,7 @@ func TestUpdate_CallsSPutWithID(t *testing.T) {
 		Name: "test",
 	})
 
-	b, _ := json.Marshal(kafka.UpdateTodoMessage{ID: id, Name: "test2"})
+	b, _ := json.Marshal(kafka.UpdateTodoMessage{Message: kafka.Message{ ID: id }, Name: "test2"})
 	Update(b)
 
 	todos := storage.S.List()

@@ -7,7 +7,5 @@ func (t Topic) String() string {
 }
 
 const (
-	CreateToDo Topic = "create-todo"
-	DeleteToDo Topic = "delete-todo"
-	UpdateToDo Topic = "update-todo"
+	Todos Topic = "todos"
 )

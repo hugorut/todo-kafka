@@ -25,14 +25,14 @@ func TestNewConsumer(t *testing.T) {
 func TestConsumeTopic(t *testing.T) {
 	consumer := mocks.NewConsumer(t, nil)
 	consumer.SetTopicMetadata(map[string][]int32{
-		CreateToDo.String(): []int32{
+		Todos.String(): []int32{
 			0,
 		},
 	})
 
-	pc := consumer.ExpectConsumePartition(CreateToDo.String(), 0, sarama.OffsetNewest)
+	pc := consumer.ExpectConsumePartition(Todos.String(), 0, sarama.OffsetNewest)
 
-	msgs, err := ConsumeTopic(consumer, CreateToDo)
+	msgs, err := ConsumeTopic(consumer, Todos)
 	assert.Nil(t, err)
 
 	go func() {
